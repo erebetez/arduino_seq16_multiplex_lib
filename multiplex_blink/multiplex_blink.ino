@@ -20,38 +20,40 @@ const int m_btn_2 = 11;
 
 const int m_btn_f = 12;
 
-int m_current_button; // TODO make array;
+int m_current_button = 1; // TODO make array;
 int m_last_button;
+int m_is_function = 0;
+
+int runner = 0;
 
 void setup() {
-  Serial.begin(9600);
-    
-  Serial.println("Hello!");
-    
   init_pins();
 
-//  test_init();
+  init_test();
  
-  ledOn(1);
-  
-  
+  ledOn(0);
 }
 
 
 void loop() {
-
-//  m_last_button = m_current_button;
+    
+  m_last_button = m_current_button;
   readButtons();
   
-//  if(m_last_button != m_current_button){
-//    ledOn(m_current_button);
-//  }
-
+  if(m_last_button != m_current_button){
+    ledOn(m_current_button);
+  }
   
-//   Serial.println(m_current_button);
-   delay(1000);
+  if(m_is_function){
+    keepLedOn(runner, m_current_button, 10);
+    runner++;
+    
+    if(runner > 15){
+      runner = 0;
+    }
+  }
+  
 }
-
 
 void init_pins(){
   // initialize the digital pin as an output.
@@ -82,67 +84,41 @@ void keepLedOn(int num, int num2, int time){
 
 void ledOn(int num){
 
-  if(num <= 8){
+  if(num < 8){
     digitalWrite(m_led_inhibit, LOW);
   } else {
     num = num - 8;
     digitalWrite(m_led_inhibit, HIGH);
   }
 
-  activateMuliplex(--num, TYPE_LED);
+  activateMuliplex(num, TYPE_LED);
 }
-
 
 
 void readButtons(){
   int buttonState = LOW;
-  
-  
-  Serial.println("__ readButtons __");
-  buttonState = digitalRead(m_btn_f);
-  Serial.print("Function:\t");
-  Serial.print(buttonState);
-  Serial.println("");
-     
+
+  m_is_function = digitalRead(m_btn_f);
+
+
   for(int i = 0; i < 8; ++i){
     activateMuliplex(i, TYPE_BUTTON);
-    
-     Serial.print("Buttons 1-8:\t");
-     Serial.print(i+1);
-     Serial.print("\t");
-     buttonState = digitalRead(m_btn_1);
-      
-     Serial.print(buttonState);
-     Serial.println("");
-      
-      if(buttonState == HIGH){
-        m_current_button = (i+1);
-//             Serial.println(m_current_button);
-        ledOn(m_current_button);
-        m_current_button = (i + 1);  
-        
+
+    buttonState = digitalRead(m_btn_1);
+
+    if(buttonState == HIGH){
+        m_current_button = i;
         return; 
       }
 
-     Serial.print("Buttons 9-16:\t");      
-     Serial.print(i+9);
-     Serial.print("\t");     
      buttonState = digitalRead(m_btn_2); 
-      
-     Serial.print(buttonState);
-     Serial.println("");
-        
+
      if(buttonState == HIGH){
-          m_current_button = (i+9);
-//             Serial.println(m_current_button);
-          ledOn(m_current_button);
-          m_current_button = (i + 9); // seccond 8 - 16;   
-           
-        return;   
+        m_current_button = i+8;
+        return;
       }
   }
-  
-  
+
 }
 
 
@@ -197,45 +173,47 @@ void writeMultiplexBtn(int a, int b, int c) {
 }
 
 
-void test_init(){
+void init_test(){
   // Test 1
-  ledOn(1);
-  delay(800);
-  for(int j = 0; j < 20; ++j){
-    for(int i = 1; i <= 16; ++i) {
+  ledOn(0);
+  delay(100);
+  for(int j = 0; j < 10; ++j){
+    for(int i = 0; i < 16; ++i) {
         ledOn(i);
         delay(10);
     }
   }
+  ledOn(0);
+  delay(200);
+
+/*
+  // Test 2
+  ledOn(1);
+  delay(800);
+  for(int i = 0; i < 16; ++i) {
+      keepLedOn(i, i + 1 ,200);
+  }
   ledOn(1);
   delay(200);
 
-  // Test 2
-  ledOn(2);
-  delay(800);
-  for(int i = 1; i <= 16; ++i) {
-      keepLedOn(i, i + 1 ,200);
-  }
-  ledOn(2);
-  delay(200);
-
   // Test 3
-  ledOn(3);
+  ledOn(2);
   delay(800);
-  for(int i = 1; i <= 16; ++i) {
-      keepLedOn(i, 16 - i ,200);
+  for(int i = 0; i < 16; ++i) {
+      keepLedOn(i, 15 - i ,200);
   }
-  ledOn(3);
+  ledOn(2);
   delay(200);
  
   // Test 4
-  ledOn(4);
+  ledOn(3);
   delay(800);
-  for(int i = 16; i > 1; --i) {
+  for(int i = 15; i > 0; --i) {
       ledOn(i);
       delay(150);
       keepLedOn(3 , 11, 100);
   }
-  ledOn(4);
+  ledOn(3);
   delay(200);  
+  */
 }
