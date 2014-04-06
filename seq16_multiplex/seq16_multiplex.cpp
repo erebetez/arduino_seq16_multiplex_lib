@@ -40,7 +40,7 @@
 	  digitalWrite(m_led_inhibit, HIGH);
 	}
 
-	writeMultiplexLed(&num);
+	writeMultiplexLed(num);
     }
     
     
@@ -50,7 +50,7 @@
       m_is_function = digitalRead(m_btn_f);
 
       for(byte i = 0; i < 8; ++i){
-	writeMultiplexBtn(&i);
+	writeMultiplexBtn(i);
 
 	buttonState = digitalRead(m_btn_1);
 
@@ -67,7 +67,7 @@
 	  }
       }
 
-    }    
+    }
     
     bool SEQ16_MULTIPEX::isFunctionActive(){
 	return m_is_function;
@@ -77,27 +77,27 @@
 	return m_last_button;
     }
 
-    void SEQ16_MULTIPEX::writeMultiplexLed(const byte *num) {
+    void SEQ16_MULTIPEX::writeMultiplexLed(const byte num) {
       byte a;
       byte b;
       byte c;
-      intToBinMuliplex(num, &a, &b, &c);
+      intToBinMuliplex(num, a, b, c);
       digitalWrite(m_led_a, a);
       digitalWrite(m_led_b, b);
       digitalWrite(m_led_c, c);
     }
 
-    void SEQ16_MULTIPEX::writeMultiplexBtn(const byte *num) {
+    void SEQ16_MULTIPEX::writeMultiplexBtn(const byte num) {
       byte a;
       byte b;
       byte c;
-      intToBinMuliplex(num, &a, &b, &c);
+      intToBinMuliplex(num, a, b, c);
       digitalWrite(m_btn_a, a);
       digitalWrite(m_btn_b, b);
       digitalWrite(m_btn_c, c);
     }
 
-    void SEQ16_MULTIPEX::intToBinMuliplex(const byte *i, byte *a, byte *b, byte *c){
+    void SEQ16_MULTIPEX::intToBinMuliplex(const byte i, byte &a, byte &b, byte &c){
       switch (i) {
 	case 0:
 	  a = LOW;
@@ -105,13 +105,13 @@
 	  c = LOW;
 	  break;
 	case 1:
-	  a = HIGHT;
+	  a = HIGH;
 	  b = LOW;
 	  c = LOW;
 	  break;
 	case 2:
 	  a = LOW;
-	  b = HIGH;
+	  b = 1;
 	  c = LOW;
 	  break;
 	case 3:
@@ -137,7 +137,7 @@
 	case 7:
 	  a = HIGH;
 	  b = HIGH;
-	  b = HIGH;
+	  c = HIGH;
 	  break;
       } 
     }

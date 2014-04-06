@@ -13,11 +13,11 @@ public:
 	bool isFunctionActive();
 	byte getCurrentButton();
 //	bool isbuttonActive(byte num);
-	void writeMultiplexLed(const byte *num);
-	void writeMultiplexBtn(const byte *num);
+	void writeMultiplexLed(const byte num);
+	void writeMultiplexBtn(const byte num);
 
 private:
-	void intToBinMuliplex(const byte *i, byte *a, byte *b, byte *c);
+	void intToBinMuliplex(const byte i, byte &a, byte &b, byte &c);
 
 
 	byte m_currently_pressed[16];
