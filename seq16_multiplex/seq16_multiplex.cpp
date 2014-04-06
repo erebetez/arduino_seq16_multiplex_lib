@@ -36,11 +36,11 @@
 	if(num < 8){
 	  digitalWrite(m_led_inhibit, LOW);
 	} else {
-	  num = num - 8;
+	  num = num-8;
 	  digitalWrite(m_led_inhibit, HIGH);
 	}
 
-	activateMuliplex(num, TYPE_LED);
+	writeMultiplexLed(&num);
     }
     
     
@@ -49,9 +49,8 @@
 
       m_is_function = digitalRead(m_btn_f);
 
-
       for(byte i = 0; i < 8; ++i){
-	activateMuliplex(i, TYPE_BUTTON);
+	writeMultiplexBtn(&i);
 
 	buttonState = digitalRead(m_btn_1);
 
@@ -73,57 +72,72 @@
     bool SEQ16_MULTIPEX::isFunctionActive(){
 	return m_is_function;
     }
-    
+
     byte SEQ16_MULTIPEX::getCurrentButton(){
 	return m_last_button;
     }
-    
-    void SEQ16_MULTIPEX::activateMuliplex(byte i, byte type){
-      switch (i) {
-	case 0:
-	  writeMultiplex(LOW, LOW, LOW, type);
-	  break;
-	case 1:
-	  writeMultiplex(HIGH, LOW, LOW, type);
-	  break;
-	case 2:
-	  writeMultiplex(LOW, HIGH, LOW, type);
-	  break;
-	case 3:
-	  writeMultiplex(HIGH, HIGH, LOW, type);
-	  break;
-	case 4:
-	  writeMultiplex(LOW, LOW, HIGH, type);
-	  break;
-	case 5:
-	  writeMultiplex(HIGH, LOW, HIGH, type);
-	  break;
-	case 6:
-	  writeMultiplex(LOW, HIGH, HIGH, type);
-	  break;
-	case 7:
-	  writeMultiplex(HIGH, HIGH, HIGH, type);
-	  break;
-      } 
-    }
 
-    void SEQ16_MULTIPEX::writeMultiplex(byte a, byte b, byte c, byte type) {
-      if(type == TYPE_LED){
-	writeMultiplexLed(a, b, c);
-      }
-      if(type == TYPE_BUTTON){
-	writeMultiplexBtn(a, b, c);
-      }
-    }
-
-    void SEQ16_MULTIPEX::writeMultiplexLed(byte a, byte b, byte c) {
+    void SEQ16_MULTIPEX::writeMultiplexLed(const byte *num) {
+      byte a;
+      byte b;
+      byte c;
+      intToBinMuliplex(num, &a, &b, &c);
       digitalWrite(m_led_a, a);
       digitalWrite(m_led_b, b);
       digitalWrite(m_led_c, c);
     }
 
-    void SEQ16_MULTIPEX::writeMultiplexBtn(byte a, byte b, byte c) {
+    void SEQ16_MULTIPEX::writeMultiplexBtn(const byte *num) {
+      byte a;
+      byte b;
+      byte c;
+      intToBinMuliplex(num, &a, &b, &c);
       digitalWrite(m_btn_a, a);
       digitalWrite(m_btn_b, b);
       digitalWrite(m_btn_c, c);
+    }
+
+    void SEQ16_MULTIPEX::intToBinMuliplex(const byte *i, byte *a, byte *b, byte *c){
+      switch (i) {
+	case 0:
+	  a = LOW;
+	  b = LOW;
+	  c = LOW;
+	  break;
+	case 1:
+	  a = HIGHT;
+	  b = LOW;
+	  c = LOW;
+	  break;
+	case 2:
+	  a = LOW;
+	  b = HIGH;
+	  c = LOW;
+	  break;
+	case 3:
+	  a = HIGH;
+	  b = HIGH;
+	  c = LOW;
+	  break;
+	case 4:
+	  a = LOW;
+	  b = LOW;
+	  c = HIGH;
+	  break;
+	case 5:
+	  a = HIGH;
+	  b = LOW;
+	  c = HIGH;
+	  break;
+	case 6:
+	  a = LOW;
+	  b = HIGH;
+	  c = HIGH;
+	  break;
+	case 7:
+	  a = HIGH;
+	  b = HIGH;
+	  b = HIGH;
+	  break;
+      } 
     }

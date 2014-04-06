@@ -3,9 +3,6 @@
 
 #include <Arduino.h> //It is very important to remember this! note that if you are using Arduino 1.0 IDE, change "WProgram.h" to "Arduino.h"
   
-#define TYPE_LED 0
-
-#define TYPE_BUTTON 1
   
 class SEQ16_MULTIPEX {
 public:
@@ -16,16 +13,14 @@ public:
 	bool isFunctionActive();
 	byte getCurrentButton();
 //	bool isbuttonActive(byte num);
-	void activateMuliplex(byte i, byte type);
-	
-	
-	
+	void writeMultiplexLed(const byte *num);
+	void writeMultiplexBtn(const byte *num);
+
 private:
-	void writeMultiplex(byte a, byte b, byte c, byte type);
-	void writeMultiplexLed(byte a, byte b, byte c);
-	void writeMultiplexBtn(byte a, byte b, byte c);
-	
-	
+	void intToBinMuliplex(const byte *i, byte *a, byte *b, byte *c);
+
+
+	byte m_currently_pressed[16];
 	byte m_last_button;
 	byte m_is_function;
 };
