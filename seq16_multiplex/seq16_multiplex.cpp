@@ -12,7 +12,7 @@
     const byte m_btn_2 = 11;
 
     const byte m_btn_f = 12;     
-      
+
     SEQ16_MULTIPEX::SEQ16_MULTIPEX(){
       pinMode(m_led_inhibit, OUTPUT); 
       pinMode(m_led_a, OUTPUT);
@@ -22,15 +22,14 @@
       pinMode(m_btn_a, OUTPUT);
       pinMode(m_btn_b, OUTPUT);
       pinMode(m_btn_c, OUTPUT);  
-      
+
       pinMode(m_btn_1, INPUT);
       pinMode(m_btn_2, INPUT);
-      
+
       pinMode(m_btn_f, INPUT);
     }
 
     SEQ16_MULTIPEX::~SEQ16_MULTIPEX(){/*nothing to destruct*/}
-     
 
     void SEQ16_MULTIPEX::ledOn(byte num){
 	if(num < 8){
@@ -42,8 +41,8 @@
 
 	writeMultiplexLed(num);
     }
-    
-    
+
+
     void SEQ16_MULTIPEX::readButtons(){
       byte buttonState = LOW;
 
@@ -68,13 +67,21 @@
       }
 
     }
-    
+
+
     bool SEQ16_MULTIPEX::isFunctionActive(){
 	return m_is_function;
     }
 
     byte SEQ16_MULTIPEX::getCurrentButton(){
 	return m_last_button;
+    }
+
+    bool SEQ16_MULTIPEX::isButtonActive(byte num){
+	if(num > 15){
+	  return false;
+	}
+	return m_currently_pressed[num];
     }
 
     void SEQ16_MULTIPEX::writeMultiplexLed(const byte num) {

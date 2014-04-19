@@ -2,8 +2,8 @@
 #define SEQ16_MULTIPEX_H
 
 #include <Arduino.h> //It is very important to remember this! note that if you are using Arduino 1.0 IDE, change "WProgram.h" to "Arduino.h"
-  
-  
+
+
 class SEQ16_MULTIPEX {
 public:
 	SEQ16_MULTIPEX();
@@ -12,7 +12,7 @@ public:
 	void readButtons();
 	bool isFunctionActive();
 	byte getCurrentButton();
-//	bool isbuttonActive(byte num);
+	bool isButtonActive(byte num);
 	void writeMultiplexLed(const byte num);
 	void writeMultiplexBtn(const byte num);
 
