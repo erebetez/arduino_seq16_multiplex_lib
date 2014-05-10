@@ -48,20 +48,24 @@
 
       m_is_function = digitalRead(m_btn_f);
 
+      m_is_button_pressed = false;
+
       for(byte i = 0; i < 8; ++i){
 	writeMultiplexBtn(i);
 
 	buttonState = digitalRead(m_btn_1);
 
 	if(buttonState == HIGH){
-	    m_last_button = i;
+	    m_current_button = i;
+	    m_is_button_pressed = true;
 	    return; 
 	  }
 
 	buttonState = digitalRead(m_btn_2); 
 
 	if(buttonState == HIGH){
-	    m_last_button = i+8;
+	    m_current_button = i+8;
+	    m_is_button_pressed = true;
 	    return;
 	  }
       }
@@ -74,14 +78,11 @@
     }
 
     byte SEQ16_MULTIPEX::getCurrentButton(){
-	return m_last_button;
+	return m_current_button;
     }
 
-    bool SEQ16_MULTIPEX::isButtonActive(byte num){
-	if(num > 15){
-	  return false;
-	}
-	return m_currently_pressed[num];
+    bool SEQ16_MULTIPEX::isButtonPressed(){
+	return m_is_button_pressed;
     }
 
     void SEQ16_MULTIPEX::writeMultiplexLed(const byte num) {
